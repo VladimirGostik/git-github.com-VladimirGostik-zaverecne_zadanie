@@ -1,0 +1,12 @@
+Návod na inštaláciu y gitu (Najprv si potrebuješ stiahnuť github repozitár)... Ďalej si potrebuješ upraviť .env...
+  .env subor je vlastne konfiguracny subor celej laravel aplikacie ten si len vytvorte a skopirujte: 
+  
+
+  nasledne spustis: composer update
+  Návod na spustenie projektu: 
+    php artisan serve
+    nvp run dev
+
+Zakladne inštrukcie potom: 
+  Keď sa dostanem na stranku tak sa dostanem na welcome.blade.php (Toto vlastne vidí neprihlásený použivateľ)
+  Keď sa prihlásim tak sa dostanem na dashboard.blade.php... a keď sa prihlasim ako admin tak sa dostanem na admin/dashboard.blade.php v týchto bladoch sa keď tak snažte robiť views pre nich...
