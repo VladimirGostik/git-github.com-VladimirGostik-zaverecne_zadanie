@@ -1,5 +1,5 @@
 <?php
-
+use \App\Hppt\Middleware\Admin;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'admin' => \App\Hppt\Middleware\Admin::class,
+            'admin' => \App\Http\Middleware\Admin::class,
 
         ]);
 
