@@ -1,21 +1,70 @@
-<x-app-layout>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-black leading-tight">
-            {{ __('Dashboard for Managing Questions') }}
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
         </h2>
+        <button onclick="CreateQuestionPage()" class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md">Add Question</button>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Správa otázok -->
-            <div class="bg-white white:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-black">
-                    <h3 class="font-semibold text-lg">Manage Your Questions</h3>
-                    <a href="{{ route('questions.create') }}" class="text-blue-500">Create New Question</a> 
-                    <br>
-                    <a href="" class="text-blue-500">View All Questions</a>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    {{ __("You're logged in!") }}
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <table id="questions-table" class="table table-striped" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Question</th>
+                                <th>Subject</th>
+                                <th>Type</th>
+                                <th>Active</th>
+                                <th>Code</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($userQuestions as $question)
+                            <tr>
+                                <td>{{ $question->question }}</td>
+                                <td>{{ $question->subject }}</td>
+                                <td>{{ $question->type === 'open_ended' ? 'Short answer' : 'Multiple choice' }}</td>
+                                <td>{{ $question->active ? 'YES' : 'NO' }}</td>
+                                <td>{{ $question->code }}</td>
+                                <td><a href="{{ route('questions.edit', $question->id) }}" class="btn btn-primary">Edit</a></td>
+                                <td>
+                                    <form action="{{ route('questions.destroy', $question->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    $(document).ready(function() {
+        $('#questions-table').DataTable();
+    });
+
+    function CreateQuestionPage() {
+        window.location.href = "{{ route('questions.create') }}";
+    }
+</script>
+

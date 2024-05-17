@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'usertype',
     ];
 
     /**
@@ -48,5 +49,10 @@ class User extends Authenticatable
     public function questions()
     {
         return $this->hasMany(Question::class, 'creator_id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->usertype === 'admin';
     }
 }

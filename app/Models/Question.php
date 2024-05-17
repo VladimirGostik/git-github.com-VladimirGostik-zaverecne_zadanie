@@ -31,4 +31,9 @@ class Question extends Model
     {
         return $this->hasMany(FreeResponseAnswer::class, 'question_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

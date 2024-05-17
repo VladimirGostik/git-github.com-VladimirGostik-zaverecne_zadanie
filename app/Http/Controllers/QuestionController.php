@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateQuestionRequest;
 use Illuminate\Http\Request;
 use App\Models\FreeResponseAnswer;
+use App\Models\Question;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 
@@ -65,6 +67,30 @@ class QuestionController extends Controller {
         // Handle the exception as needed (logging, returning an error response, etc.)
         return back()->withError('An error occurred while saving the question.');
     }
+}
+
+// Retrieve all questions created by the authenticated user
+public function index()
+{
+    $userQuestions = auth()->user()->questions()->latest()->get();
+    return view('dashboard', compact('userQuestions'));
+}
+
+// Retrieve all questions from the database - for admin users
+public function allQuestions()
+{
+    // Retrieve all questions with their respective creators
+    $questions = Question::with('user')->latest()->get();
+
+    // Extract creator names from users table
+    $creatorNames = [];
+    foreach ($questions as $question) {
+        $creatorId = $question->creator_id;
+        $creator = User::find($creatorId);
+        $creatorNames[$question->id] = $creator->name;
+    }
+
+    return view('admin.dashboard', compact('questions', 'creatorNames'));
 }
 
     // Store a new free response answer in the database
