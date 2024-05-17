@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateQuestionRequest;
 use Illuminate\Http\Request;
 use App\Models\FreeResponseAnswer;
+use Illuminate\Support\Facades\DB;
+
 
 class QuestionController extends Controller
 {
@@ -16,29 +18,52 @@ class QuestionController extends Controller
     // Store a new question in the database
     public function store(CreateQuestionRequest $request)
 {
+    // Start a transaction
+    DB::beginTransaction();
 
-    // Generate a unique 5-character alphanumeric code
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $code = '';
-    for ($i = 0; $i < 5; $i++) {
-        $code .= $characters[rand(0, strlen($characters) - 1)];
+    try {
+        // Generate a unique 5-character alphanumeric code
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $code = '';
+        for ($i = 0; $i < 5; $i++) {
+            $code .= $characters[rand(0, strlen($characters) - 1)];
+        }
+
+        // Create the question
+        $question = auth()->user()->questions()->create([
+            'question' => $request->questionText,
+            'type' => $request->questionType,
+            'creator_id' => auth()->id(),
+            'code' => $code,
+            'startdate' => $request->start_date,
+            'starttime' => $request->start_time,
+            'enddate' => $request->end_date,
+            'endtime' => $request->end_time,
+        ]);
+
+        // Create and store the multiple choice answers
+    $options = $request->options;
+    $correctOptions = $request->correct_options;
+    foreach ($options as $key => $option) {
+        $isCorrect = array_key_exists($key, $correctOptions);
+        $question->multipleChoiceAnswers()->create([
+            'answer' => $option,
+            'is_correct' => $isCorrect,
+        ]);
     }
-    auth()->user()->questions()->create([
-        'question' => $request->questionText,
-        'type' => $request->questionType,
-        'creator_id' => auth()->id(),
-        'code' => $code,
-        'startdate' => $request->start_date,
-        'starttime' => $request->start_time,
-        'enddate' => $request->end_date,
-        'endtime' => $request->end_time,
 
-    ]);
-    $options = [];
-    return back();
+        // Commit the transaction if all operations succeed
+        DB::commit();
+
+        return redirect()->route('dashboard')->with('success', 'Question created successfully!');
+    } catch (\Exception $e) {
+        // Rollback the transaction if an exception occurs
+        DB::rollBack();
+
+        // Handle the exception as needed (logging, returning an error response, etc.)
+        return back()->withError('An error occurred while saving the question.');
+    }
 }
-
-
     // Store a new free response answer in the database
     public function storeFreeResponseAnswer(Request $request)
     {
