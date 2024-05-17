@@ -41,16 +41,19 @@ class QuestionController extends Controller
             'endtime' => $request->end_time,
         ]);
 
-        // Create and store the multiple choice answers
-    $options = $request->options;
-    $correctOptions = $request->correct_options;
-    foreach ($options as $key => $option) {
-        $isCorrect = array_key_exists($key, $correctOptions);
-        $question->multipleChoiceAnswers()->create([
-            'answer' => $option,
-            'is_correct' => $isCorrect,
-        ]);
-    }
+        // Check if the question type is multiple choice
+        if ($request->questionType === 'multiple_choice') {
+            // Create and store the multiple choice answers
+            $options = $request->options;
+            $correctOptions = $request->correct_options;
+            foreach ($options as $key => $option) {
+                $isCorrect = array_key_exists($key, $correctOptions);
+                $question->multipleChoiceAnswers()->create([
+                    'answer' => $option,
+                    'is_correct' => $isCorrect,
+                ]);
+            }
+        }
 
         // Commit the transaction if all operations succeed
         DB::commit();
@@ -64,6 +67,7 @@ class QuestionController extends Controller
         return back()->withError('An error occurred while saving the question.');
     }
 }
+
     // Store a new free response answer in the database
     public function storeFreeResponseAnswer(Request $request)
     {
