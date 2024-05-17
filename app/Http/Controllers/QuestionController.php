@@ -7,8 +7,7 @@ use App\Models\FreeResponseAnswer;
 use Illuminate\Support\Facades\DB;
 
 
-class QuestionController extends Controller
-{
+class QuestionController extends Controller {
     // Display form for creating a question
     public function create()
     {
@@ -16,8 +15,7 @@ class QuestionController extends Controller
     }
 
     // Store a new question in the database
-    public function store(CreateQuestionRequest $request)
-{
+    public function store(CreateQuestionRequest $request) {
     // Start a transaction
     DB::beginTransaction();
 
@@ -32,6 +30,7 @@ class QuestionController extends Controller
         // Create the question
         $question = auth()->user()->questions()->create([
             'question' => $request->questionText,
+            'subject' => $request->subject,
             'type' => $request->questionType,
             'creator_id' => auth()->id(),
             'code' => $code,

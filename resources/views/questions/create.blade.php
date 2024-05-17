@@ -88,6 +88,10 @@
                 <label for="questionText" class="block text-gray-700 text-sm font-bold mb-2">Question Text:</label>
                 <input type="text" id="questionText" name="questionText" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
             </div>
+            <div class="mb-4">
+                <label for="subject" class="block text-gray-700 text-sm font-bold mb-2">Subject:</label>
+                <input type="text" id="subject" name="subject" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
             <div class="flex mb-4 -mx-2">
                 <div class="w-1/2 px-2">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Start Date and Time:</label>
