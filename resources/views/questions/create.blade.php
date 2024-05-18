@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pseudo Slido</title>
-    <!-- Fonts -->
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS Link -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Creating a new question') }}
+        </h2>
+</x-slot>
 
     <script>
         function addOption() {
@@ -68,20 +65,8 @@
             }
         }
     </script>
-</head>
-
-<body class="bg-gray-100">
-    <nav class="bg-white px-6 py-4 shadow">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <a href="/" class="text-lg font-semibold text-blue-600">Pseudo Slido</a>
-                <a href="{{ route('tutorial') }}" class="text-lg text-blue-600 hover:text-blue-700">Tutorial</a>
-            </div>
-        </div>
-    </nav>
 
     <div class="max-w-4xl mx-auto bg-white p-6 mt-8 rounded-lg shadow">
-        <h1 class="text-xl font-semibold mb-8">Creating a New Question</h1>
         <form action="{{ route('questions.store') }}" method="POST">
             @csrf
             <div class="mb-4">
@@ -140,6 +125,6 @@
             </div>
         </form>
     </div>
-</body>
 
-</html>
+</x-app-layout>
+

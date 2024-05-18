@@ -18,13 +18,7 @@
                 <div class="text-lg font-semibold text-blue-600">Pseudo Slido</div>
                 <a href="/" class="text-lg text-blue-600 hover:text-blue-700">Home</a>
             </div>
-            <div>
-                <!-- Authentication Links or other navigation links -->
-                <a href="/login" class="text-blue-500 hover:text-blue-700 transition-colors px-3 py-2 rounded">Log
-                    in</a>
-                <a href="/register"
-                    class="text-blue-500 hover:text-blue-700 transition-colors px-3 py-2 rounded">Register</a>
-            </div>
+            
         </div>
     </nav>
     <div class="flex items-center justify-center min-h-screen">

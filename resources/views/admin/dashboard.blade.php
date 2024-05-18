@@ -43,7 +43,10 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6 d-flex justify-content-center">  <button onclick="CreateQuestionPage()" class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md">Add Question</button>
+                    </div>
                 </div>
+                
         </div>
     </div>
 </x-app-layout>
@@ -51,4 +54,7 @@
     $(document).ready(function() {
         $('#questions-table').DataTable();
     });
+    function CreateQuestionPage() {
+        window.location.href = "{{ route('questions.create') }}";
+    }
 </script>
