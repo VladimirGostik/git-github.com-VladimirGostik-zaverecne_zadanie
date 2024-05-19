@@ -18,10 +18,13 @@ class Question extends Model
         'starttime',
         'enddate',
         'endtime',
-        'creator_id'
+        'creator_id',
+        'multiple_answer',
+        'open_ended_display',
     ];
 
     protected $guarded = [];
+
     public function multipleChoiceAnswers()
     {
         return $this->hasMany(MultipleChoiceAnswer::class, 'question_id');

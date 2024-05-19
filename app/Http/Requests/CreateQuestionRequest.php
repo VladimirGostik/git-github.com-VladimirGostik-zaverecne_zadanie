@@ -28,10 +28,15 @@ class CreateQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-          'questionText' => 'required|string',
-          'questionType' => 'required|string',
-          // 'options' => 'required|array|min:2', // Validation for array elements
-          // 'correct_options.*' => 'required|array|min:1' // Validation for array elements
+            'questionText' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'questionType' => 'required|string|in:open_ended,multiple_choice',
+            'start_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i',
+            'end_date' => 'required|date',
+            'end_time' => 'required|date_format:H:i',
+            'multiple_answer' => 'nullable|boolean',
+            'open_ended_display' => 'nullable|string|in:list,word_cloud',
         ];
     }
 }
