@@ -24,7 +24,7 @@
 
         const newOption = document.createElement('input');
         newOption.type = 'text';
-        newOption.name = `options[${optionIndex}]`;
+        newOption.name = `options[${optionIndex - 1}]`;
         newOption.placeholder = `Option ${optionIndex}`;
         newOption.className = 'option-input shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 
@@ -102,6 +102,19 @@
         <form action="{{ route('questions.update', $question->id) }}" method="POST">
             @csrf
             @method('PATCH')
+             <!-- Select User -->
+            @if(Auth::user()->isAdmin())
+            <div class="mb-4">
+                <label for="user" class="block text-gray-700 text-sm font-bold mb-2">Select Publisher:</label>
+                <select id="user" name="user" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    @foreach($users as $user)
+                    <option value="{{ $user->id }}" {{ old('user', $question->creator_id) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @else
+            <input type="hidden" name="user" value="{{ Auth::id() }}">
+            @endif
             <div class="mb-4">
                 <label for="question" class="block text-gray-700 text-sm font-bold mb-2">Question Text:</label>
                 <input type="text" id="question" name="question" value="{{ old('question', $question->question) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>

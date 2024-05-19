@@ -16,7 +16,7 @@
 
             const newOption = document.createElement('input');
             newOption.type = 'text';
-            newOption.name = `options[${optionIndex}]`;
+            newOption.name = `options[${optionIndex - 1}]`;
             newOption.placeholder = `Option ${optionIndex}`;
             newOption.className = 'option-input shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 
@@ -84,6 +84,19 @@
     <div class="max-w-4xl mx-auto bg-white p-6 mt-8 rounded-lg shadow">
         <form action="{{ route('questions.store') }}" method="POST">
             @csrf
+            <!-- Select User -->
+            @if(Auth::user()->isAdmin())
+            <div class="mb-4">
+                <label for="user" class="block text-gray-700 text-sm font-bold mb-2">Select Publisher:</label>
+                <select id="user" name="user" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    @foreach($users as $user)
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @else
+            <input type="hidden" name="user" value="{{ Auth::id() }}">
+            @endif
             <div class="mb-4">
                 <label for="questionText" class="block text-gray-700 text-sm font-bold mb-2">Question Text:</label>
                 <input type="text" id="questionText" name="questionText" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
@@ -114,7 +127,7 @@
             </div>          
             <!-- Multiple Choice Settings -->
             <div id="multipleChoiceSettings" class="mb-4" style="display: none;">
-                <label for="multipleChoiceSelection" class="block text-gray-700 text-sm font-bold mb-2">Allow Multiple Selections:</label>
+            <label for="multipleChoiceSelection" class="block text-gray-700 text-sm font-bold mb-2">Allow Multiple Selections:</label>
                 <select id="multipleChoiceSelection" name="multipleChoiceSelection" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="single">Single Answer</option>
                     <option value="multiple">Multiple Answers</option>
@@ -122,7 +135,7 @@
             </div>
             <!-- Open-Ended Settings -->
             <div id="openEndedSettings" class="mb-4" style="display: none;">
-                <label for="openEndedDisplay" class="block text-gray-700 text-sm font-bold mb-2">Display As:</label>
+            <label for="openEndedDisplay" class="block text-gray-700 text-sm font-bold mb-2">Display As:</label>
                 <select id="openEndedDisplay" name="openEndedDisplay" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="list">List</option>
                     <option value="word_cloud">Word Cloud</option>

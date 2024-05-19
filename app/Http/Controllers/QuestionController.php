@@ -13,7 +13,11 @@ class QuestionController extends Controller {
     // Display form for creating a question
     public function create()
     {
-        return view('questions.create');
+        // Fetch all existing users
+        $users = User::all();
+        
+        // Pass the $users variable to the view
+        return view('questions.create', compact('users'));
     }
 
     // Store a new question in the database
@@ -27,7 +31,7 @@ class QuestionController extends Controller {
             $code = '';
             for ($i = 0; $i < 5; $i++) {
                 $code .= $characters[rand(0, strlen($characters) - 1)];
-            }   
+            }  
             // Initialize values for multiple_answer and open_ended_display
             $multipleAnswer = null;
             $openEndedDisplay = null;
@@ -41,12 +45,16 @@ class QuestionController extends Controller {
                 $openEndedDisplay = $request->openEndedDisplay;
             }
     
-            // Create the question
-            $question = auth()->user()->questions()->create([
+            $creatorId = auth()->id();
+            if (auth()->user()->isAdmin() && $request->filled('user')) {
+                $creatorId = $request->user;
+            }
+
+            $question = Question::create([
                 'question' => $request->questionText,
                 'subject' => $request->subject,
                 'type' => $request->questionType,
-                'creator_id' => auth()->id(),
+                'creator_id' => $creatorId,
                 'code' => $code,
                 'startdate' => $request->start_date,
                 'starttime' => $request->start_time,
@@ -74,10 +82,8 @@ class QuestionController extends Controller {
             DB::commit();
     
             // Determine the dashboard route based on the user's role
-        $dashboardRoute = Auth::user()->isAdmin() ? 'admin.dashboard' : 'dashboard';
-
-        // Redirect the user to the appropriate dashboard route
-        return redirect()->route($dashboardRoute)->with('success', 'Question created successfully!');
+            $dashboardRoute = Auth::user()->isAdmin() ? 'admin.dashboard' : 'dashboard';
+            return redirect()->route($dashboardRoute)->with('success', 'Question created successfully!');
 
         } catch (\Exception $e) {
             // Rollback the transaction if an exception occurs
@@ -114,8 +120,11 @@ class QuestionController extends Controller {
 
     public function edit(Question $question)
     {
+        // Fetch all existing users
+        $users = User::all();
+
         $multipleChoiceAnswers = $question->multipleChoiceAnswers()->get();
-        return view('questions.edit', compact('question', 'multipleChoiceAnswers'));
+        return view('questions.edit', compact('question', 'multipleChoiceAnswers', 'users'));
     }
 
     public function update(Request $request, Question $question)
@@ -137,11 +146,16 @@ class QuestionController extends Controller {
 
     // Update the `multiple_answer` and `open_ended_display` fields separately
     if ($request->type == 'multiple_choice') {
-        $question->multiple_answer = $request->input('multiple_answer', false); // Default to false if not present
+        $question->multiple_answer =  $request->multipleChoiceSelection === 'multiple';
         $question->open_ended_display = null; // Reset to null for multiple choice questions
     } else {
-        $question->open_ended_display = $request->input('open_ended_display', 'list'); // Default to 'list' if not present
+        $question->open_ended_display = $request->input('openEndedDisplay', 'list'); // Default to 'list' if not present
         $question->multiple_answer = null; // Reset to null for open-ended questions
+    }
+
+    // Update the creator ID if the user is an admin
+    if (auth()->user()->isAdmin() && $request->filled('user')) {
+        $question->creator_id = $request->user;
     }
 
     $question->save();
@@ -167,8 +181,9 @@ class QuestionController extends Controller {
     $dashboardRoute = Auth::user()->isAdmin() ? 'admin.dashboard' : 'dashboard';
 
     // Redirect the user to the appropriate dashboard route
-    return redirect()->route($dashboardRoute)->with('success', 'Question created successfully!');
+    return redirect()->route($dashboardRoute)->with('success', 'Question updated successfully!');
 }
+
 
     // Store a new free response answer in the database
     public function storeFreeResponseAnswer(Request $request)
@@ -185,6 +200,6 @@ class QuestionController extends Controller {
         $answer->answer = $request->input('answer');
         $answer->save();
 
-        return redirect()->route('dashboard')->with('success', 'Question created successfully!');
+        return redirect()->route('dashboard')->with('success', 'Answer submitted successfully!');
     }
 }
