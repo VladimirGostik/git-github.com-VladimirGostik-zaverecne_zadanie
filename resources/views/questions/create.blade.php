@@ -1,11 +1,11 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Creating a new question') }}
         </h2>
-</x-slot>
+    </x-slot>
 
     <script>
         function addOption() {
@@ -16,13 +16,13 @@
 
             const newOption = document.createElement('input');
             newOption.type = 'text';
-            newOption.name = `options[${optionIndex - 1}]`; // Generate name with sequential index
+            newOption.name = `options[${optionIndex}]`;
             newOption.placeholder = `Option ${optionIndex}`;
             newOption.className = 'option-input shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 
             const newCheckbox = document.createElement('input');
             newCheckbox.type = 'checkbox';
-            newCheckbox.name = `correct_options[${optionIndex - 1}]`; // Generate name with sequential index
+            newCheckbox.name = `correct_options[${optionIndex}]`;
             newCheckbox.className = 'ml-2';
 
             const newLabel = document.createElement('label');
@@ -52,16 +52,31 @@
                     parentDiv.parentNode.removeChild(parentDiv);
                 });
             });
+            toggleOptionsField();
         });
 
         function toggleOptionsField() {
             const questionType = document.getElementById('questionType').value;
-            const optionsContainer = document.getElementById('multipleChoiceOptions');
+            const addOptionButton = document.getElementById('addOptionButton');
+            const multipleChoiceOptions = document.getElementById('multipleChoiceOptions');
+            const multipleChoiceSettings = document.getElementById('multipleChoiceSettings');
+            const openEndedSettings = document.getElementById('openEndedSettings');
 
             if (questionType === 'multiple_choice') {
-                optionsContainer.style.display = 'block';
+                multipleChoiceOptions.style.display = 'block';
+                multipleChoiceSettings.style.display = 'block';
+                openEndedSettings.style.display = 'none';
+                addOptionButton.style.display = 'block';
+            } else if (questionType === 'open_ended') {
+                multipleChoiceOptions.style.display = 'none';
+                multipleChoiceSettings.style.display = 'none';
+                openEndedSettings.style.display = 'block';
+                addOptionButton.style.display = 'none';
             } else {
-                optionsContainer.style.display = 'none';
+                multipleChoiceOptions.style.display = 'none';
+                multipleChoiceSettings.style.display = 'none';
+                openEndedSettings.style.display = 'none';
+                addOptionButton.style.display = 'none';
             }
         }
     </script>
@@ -96,10 +111,26 @@
                     <option value="multiple_choice">Multiple Choice</option>
                     <option value="open_ended">Open-Ended</option>
                 </select>
+            </div>          
+            <!-- Multiple Choice Settings -->
+            <div id="multipleChoiceSettings" class="mb-4" style="display: none;">
+                <label for="multipleChoiceSelection" class="block text-gray-700 text-sm font-bold mb-2">Allow Multiple Selections:</label>
+                <select id="multipleChoiceSelection" name="multipleChoiceSelection" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="single">Single Answer</option>
+                    <option value="multiple">Multiple Answers</option>
+                </select>
             </div>
+            <!-- Open-Ended Settings -->
+            <div id="openEndedSettings" class="mb-4" style="display: none;">
+                <label for="openEndedDisplay" class="block text-gray-700 text-sm font-bold mb-2">Display As:</label>
+                <select id="openEndedDisplay" name="openEndedDisplay" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="list">List</option>
+                    <option value="word_cloud">Word Cloud</option>
+                </select>
+            </div>
+            <!-- Multiple Choice Options -->
             <div id="multipleChoiceOptions" class="mb-4" style="display: none;">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Choices:</label>
-                <!-- Initialize with three inputs -->
                 <div class="mb-2 flex items-center">
                     <input type="text" placeholder="Option 1" name="options[0]" class="option-input shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <input type="checkbox" name="correct_options[0]" class="ml-2">
@@ -119,12 +150,10 @@
                     <button type="button" class="delete-option ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Delete</button>
                 </div>
             </div>
-            <button type="button" onclick="addOption()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline">Add another option</button>
+            <button id="addOptionButton" type="button" onclick="addOption()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline">Add another option</button>
             <div class="flex items-center justify-between mt-4">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Question</button>
             </div>
         </form>
     </div>
-
 </x-app-layout>
-
