@@ -267,5 +267,20 @@ public function showResults($code)
     return view('questions.results', compact('question', 'answers'));
 }
 
+public function destroy($id)
+{
+    $question = Question::findOrFail($id); // Find the question by its ID
+
+    // Check if the current user is authorized to delete the question
+    if (auth()->user()->isAdmin() || $question->creator_id === auth()->id()) {
+        $question->delete(); // Delete the question
+        return redirect()->route('dashboard')->with('success', 'Question deleted successfully');
+    }
+    
+    // Determine the dashboard route based on the user's role
+    $dashboardRoute = Auth::user()->isAdmin() ? 'admin.dashboard' : 'dashboard';
+    return redirect()->route($dashboardRoute)->with('success', 'Question deleted successfully!');
+}
+
 
 }

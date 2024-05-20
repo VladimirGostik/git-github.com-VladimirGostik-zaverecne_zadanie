@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-
+        <div class="py-12"></div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
@@ -42,12 +42,14 @@
                                 <td>{{ $question->question }}</td>
                                 <td>{{ $question->subject }}</td>
                                 <td>{{ $question->type === 'open_ended' ? 'Short answer' : 'Multiple choice' }}</td>
-                                <td>{{ $question->active ? 'YES' : 'NO' }}</td>
+                                <td>{{ $question->active ? 'Yes' : 'No' }}</td>
                                 <td>{{ $question->code }}</td>
                                 <td>{{ date('Y-m-d', strtotime($question->created_at)) }}</td>
-                                <td><a href="{{ route('questions.edit', $question->id) }}" class="btn btn-primary">Edit</a></td>
                                 <td>
-                                    <form action="{{ route('questions.destroy', $question->id) }}" method="POST">
+                                    <a href="{{ route('questions.edit', $question->id) }}" class="btn btn-primary">Edit</a>
+                                </td>
+                                <td>
+                                    <form action="{{ route('questions.destroy', $question->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger">Delete</button>
@@ -65,14 +67,16 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6 d-flex justify-content-center">  <button onclick="CreateQuestionPage()" class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md">Add Question</button>
-
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6 d-flex justify-content-center">  
+                <button onclick="CreateQuestionPage()" class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md">Add Question</button>
         </div>
+    </div>
     </div>
 </x-app-layout>
 
