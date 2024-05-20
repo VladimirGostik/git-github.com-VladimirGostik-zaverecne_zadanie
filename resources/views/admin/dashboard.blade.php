@@ -10,6 +10,11 @@
             {{ __('Admin Dashboard') }}
         </h2>
     </x-slot>
+    <style>
+        .dropdown .form {
+            margin-bottom: 0px; /* Adjust the right margin as needed */
+        }
+    </style>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6">
@@ -24,8 +29,7 @@
                                 <th>Type</th>
                                 <th>Active</th>
                                 <th>Created At</th>
-                                <th></th>
-                                <th></th>
+                                <th>Manage</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,14 +42,28 @@
                                 <td>{{ $question->active ? 'Yes' : 'No' }}</td>
                                 <td>{{ date('Y-m-d', strtotime($question->created_at)) }}</td>
                                 <td>
-                                    <a href="{{ route('questions.edit', $question->id) }}" class="btn btn-primary">Edit</a>
-                                </td>
-                                <td>
-                                    <form action="{{ route('questions.destroy', $question->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton{{$question->id}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{$question->id}}">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('questions.edit', $question->id) }}">Edit</a></li>
+                                            <li>
+                                                <form class="form" action="{{ route('questions.destroy', $question->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item">Delete</button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form class="form" action="{{ route('admin.questions.copy', $question->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item">Copy</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach

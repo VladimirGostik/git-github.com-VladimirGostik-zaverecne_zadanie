@@ -273,13 +273,43 @@ public function destroy($id)
 
     // Check if the current user is authorized to delete the question
     if (auth()->user()->isAdmin() || $question->creator_id === auth()->id()) {
-        $question->delete(); // Delete the question
-        return redirect()->route('dashboard')->with('success', 'Question deleted successfully');
+        $question->delete();
     }
     
     // Determine the dashboard route based on the user's role
     $dashboardRoute = Auth::user()->isAdmin() ? 'admin.dashboard' : 'dashboard';
     return redirect()->route($dashboardRoute)->with('success', 'Question deleted successfully!');
+}
+
+public function copy(Question $question)
+{
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $code = '';
+    for ($i = 0; $i < 5; $i++) {
+        $code .= $characters[rand(0, strlen($characters) - 1)];
+    }  
+
+    // Duplicate the question
+    $newQuestion = $question->replicate();
+    $newQuestion->question = 'Duplicate of ' . $question->question;
+    $newQuestion->code = $code;
+    $newQuestion->save();
+
+    // Retrieve the newly created question from the database by its unique code
+    $newQuestion = Question::where('code', $code)->first();
+
+    // Duplicate options if it's a multiple-choice question
+    if ($question->type === 'multiple_choice') {
+        foreach ($question->multipleChoiceAnswers as $option) {
+            $newOption = $option->replicate();
+            $newOption->question_id = $newQuestion->id;
+            $newOption->save();
+        }
+    }
+
+    // Determine the dashboard route based on the user's role
+    $dashboardRoute = Auth::user()->isAdmin() ? 'admin.dashboard' : 'dashboard';
+    return redirect()->route($dashboardRoute)->with('success', 'Question copied successfully!');
 }
 
 

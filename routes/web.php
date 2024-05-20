@@ -29,8 +29,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
     Route::post('/questions/create', [QuestionController::class, 'store'])->name('questions.store');
     Route::get('/questions/{question}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
-    Route::patch('/questions/{question}', [QuestionController::class, 'update'])->name('questions.update'); // Added this route
+    Route::patch('/questions/{question}', [QuestionController::class, 'update'])->name('questions.update');
     Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+    // Route::post('/questions/{question}/copy', [QuestionController::class, 'copy'])->name('questions.copy'); toto
+
 });
 
 // Admin routes
@@ -40,8 +42,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
     Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::get('/admin/users', [UserController::class, 'allUsers'])->name('admin.users'); // Assuming this is a separate action
+    Route::get('/admin/users', [UserController::class, 'allUsers'])->name('admin.users');
+    // Route::post('/questions/{question}/copy', [QuestionController::class, 'copy'])->name('admin.questions.copy'); + toto neide
 });
+
 
 // Other routes
 Route::get('/tutorial', [TutorialController::class, 'index'])->name('tutorial');
@@ -54,4 +58,5 @@ Route::post('/questions/storeFreeResponseAnswer', [QuestionController::class, 's
 Route::post('/questions/storeMultipleChoiceAnswer', [QuestionController::class, 'storeMultipleChoiceAnswer'])->name('questions.storeMultipleChoiceAnswer');
 
 Route::get('/results/{code}', [QuestionController::class, 'showResults'])->name('questions.results');
+Route::post('/questions/{question}/copy', [QuestionController::class, 'copy'])->name('admin.questions.copy'); // Bohuzial musi byt takto, ked pridam osobitne do admin aj user grupy tak to nefunguje
 
