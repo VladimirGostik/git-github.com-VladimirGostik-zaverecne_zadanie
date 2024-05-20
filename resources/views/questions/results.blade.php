@@ -64,44 +64,50 @@
 
             <!-- Display results for open-ended questions -->
             @if ($question->type === 'open_ended')
-                @if ($question->open_ended_display === 'list')
-                    <ul class="list-disc list-inside">
-                        @foreach ($answers as $answer)
-                            <li>{{ $answer->answer }}</li>
-                        @endforeach
-                    </ul>
-                    <button onclick="location.href='/'" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">
-                        Back to Home
-                    </button>
-                @elseif ($question->open_ended_display === 'word_cloud')
-                    <div class="flex flex-wrap">
-                        @php
-                            // Define the maximum font size
-                            $maxFontSize = 48; // Maximum font size in pixels
-                            $minFontSize = 14; // Minimum font size in pixels
-                            
-                            // Count the frequency of each answer
-                            $answerCounts = $answers->countBy('answer');
-
-                            // Find the maximum count
-                            $maxCount = $answerCounts->max();
-
-                            // Calculate the font size coefficient
-                            $fontSizeCoefficient = $maxFontSize / $maxCount;
-                        @endphp
-                        @foreach ($answerCounts as $answer => $count)
+    @if ($question->open_ended_display === 'list')
+        <div class="grid grid-cols-1 gap-4">
+            @foreach ($answers as $answer)
+                <div class="bg-white rounded-lg shadow-lg p-4">
+                    <p class="text-lg">{{ $answer->answer }}</p>
+                </div>
+            @endforeach
+        </div>
+        <button onclick="location.href='/'" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">
+            Back to Home
+        </button>
+                    @elseif ($question->open_ended_display === 'word_cloud')
+                        <div class="flex flex-wrap">
                             @php
-                                // Calculate the font size for each answer
-                                $fontSize = max($minFontSize, $count * $fontSizeCoefficient);
+                                // Define the maximum and minimum font sizes
+                                $maxFontSize = 64;
+                                $minFontSize = 12;
+
+                                // Count the frequency of each answer
+                                $answerCounts = $answers->countBy('answer');
+
+                                // Find the maximum count
+                                $maxCount = $answerCounts->max();
+
+                                // Calculate the log base to smooth out the differences
+                                $logBase = $maxCount > 1 ? log($maxCount) : 1;
+
+                                // Random array of pretty colors
+                                $colors = ['#00FF00', '#0000FF', '#00FFFF', '#FF00FF', 
+                                            '#FFA500', '#00FF00', '#008080', '#FF0000', '#000000'];
                             @endphp
-                            <span class="m-2" style="font-size: {{ $fontSize }}px;">{{ $answer }}</span>
-                        @endforeach
-                        
-                    </div>
-                    <button onclick="location.href='/'" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">
-                        Back to Home
-                    </button>
-                @endif
+                            @foreach ($answerCounts as $answer => $count)
+                                @php
+                                    $fontSize = $minFontSize + ($maxFontSize - $minFontSize) * (log($count + 1) / $logBase);
+                                    // Randomly select a pretty color from the random array
+                                    $color = $colors[array_rand($colors)];
+                                @endphp
+                                <span class="m-2" style="font-size: {{ $fontSize }}px; color: {{ $color }};">{{ $answer }}</span>
+                            @endforeach
+                        </div>
+                        <button onclick="location.href='/'" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">
+                            Back to Home
+                        </button>
+                    @endif
             @endif
 
             <!-- Display results for multiple-choice questions -->
@@ -129,5 +135,4 @@
         </div>
     </div>
 </body>
-
 </html>
