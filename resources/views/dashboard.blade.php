@@ -1,3 +1,7 @@
+<script defer src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <x-app-layout>
@@ -27,6 +31,7 @@
                                 <th>Type</th>
                                 <th>Active</th>
                                 <th>Code</th>
+                                <th>Created At</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -39,6 +44,7 @@
                                 <td>{{ $question->type === 'open_ended' ? 'Short answer' : 'Multiple choice' }}</td>
                                 <td>{{ $question->active ? 'YES' : 'NO' }}</td>
                                 <td>{{ $question->code }}</td>
+                                <td>{{ date('Y-m-d', strtotime($question->created_at)) }}</td>
                                 <td><a href="{{ route('questions.edit', $question->id) }}" class="btn btn-primary">Edit</a></td>
                                 <td>
                                     <form action="{{ route('questions.destroy', $question->id) }}" method="POST">
@@ -50,6 +56,17 @@
                             </tr>
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -61,7 +78,37 @@
 
 <script>
     $(document).ready(function() {
-        $('#questions-table').DataTable();
+        new DataTable('#questions-table', {
+            pageLength: 25,
+    initComplete: function () {
+        this.api()
+            .columns([1, 5])
+            .every(function () {
+                let column = this;
+
+                // Create select element
+                let select = document.createElement('select');
+                select.add(new Option(''));
+                column.footer().replaceChildren(select);
+
+                // Apply listener for user change in value
+                select.addEventListener('change', function () {
+                    column
+                        .search(select.value, {exact: true})
+                        .draw();
+                });
+
+                // Add list of options
+                column
+                    .data()
+                    .unique()
+                    .sort()
+                    .each(function (d, j) {
+                        select.add(new Option(d));
+                    });
+            });
+    }
+});
     });
 
     function CreateQuestionPage() {

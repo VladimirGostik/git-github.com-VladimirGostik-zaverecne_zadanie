@@ -1,3 +1,7 @@
+<script defer src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <x-app-layout>
@@ -28,7 +32,7 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->usertype }}</td>
-                                <td>{{ $user->created_at->format('Y-m-d H:i:s') }}</td>
+                                <td>{{ date('Y-m-d', strtotime($user->created_at)) }}</td>
                                 <td>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">Edit</a>
                                 </td>
@@ -49,7 +53,9 @@
     </div>
 </x-app-layout>
 <script>
-    $(document).ready(function() {
-        $('#users-table').DataTable();
+    $(document).ready(function() { 	
+        new DataTable('#users-table', {
+            pageLength: 25
+        });
     });
 </script>
