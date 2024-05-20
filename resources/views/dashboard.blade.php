@@ -92,6 +92,21 @@
             </div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6 d-flex justify-content-center">  
                 <button onclick="CreateQuestionPage()" class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md">Add Question</button>
+            </div>
+
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6 d-flex justify-content-center">
+                <a href="{{ route('export.csv') }}"
+                    class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md mr-2">Export
+                    Questions</a>
+                <a href="{{ route('export2.csv') }}"
+                    class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md mr-2">Export
+                    Multi Choice Answers</a>
+                <a href="{{ route('export3.csv') }}"
+                    class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md">Export
+                    Free Answers</a>
+            </div>
+
+
         </div>
     </div>
 </x-app-layout>

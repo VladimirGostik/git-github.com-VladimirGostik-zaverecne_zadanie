@@ -33,6 +33,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
     // Route::post('/questions/{question}/copy', [QuestionController::class, 'copy'])->name('questions.copy'); toto
 
+    Route::get('/export-csv', [QuestionController::class, 'exportToCSV'])->name('export.csv');
+    Route::get('/export-csv2', [QuestionController::class, 'export2'])->name('export2.csv');
+    Route::get('/export-csv3', [QuestionController::class, 'export3'])->name('export3.csv');
 });
 
 // Admin routes

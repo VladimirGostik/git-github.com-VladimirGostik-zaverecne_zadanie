@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'head' => '',
+    'head' => 'Tutoriál',
     'text' => "Vitajte v našom online hlasovacom systéme, ktorý je navrhnutý pre jednoduché a efektívne hlasovanie. Táto príručka vám poskytne podrobné pokyny pre použitie aplikácie z pohľadu neprihláseného používateľa, prihláseného používateľa a administrátora.",
     'unauth_user' => "Neprihlásený používateľ",
     'unauth_user_text' => "Ako neprihlásený používateľ máte možnosť zúčastniť sa hlasovania prostredníctvom niekoľkých jednoduchých krokov. Najprv navštívte domovskú stránku aplikácie, kde môžete zadať vstupný kód hlasovacej otázky, ktorý vám poskytol napríklad prednášajúci. Po zadaní kódu budete presmerovaní na stránku s hlasovacou otázkou, kde môžete odovzdať svoj hlas. Kod je možné zadať do input políčka alebo dopísanie do URL adresy (https://nodeXX.webte.fei.stuba.sk/abcde). Po hlasovaní sa vám zobrazí grafické zobrazenie výsledkov hlasovania, ktoré môže byť zobrazené buď ako zoznam alebo ako word cloud podľa toho ako zadávateľ definoval otázku.",
