@@ -15,6 +15,9 @@ Route::get('/', function () {
 // Authentication routes
 require __DIR__.'/auth.php';
 
+// Non-logged user routes
+Route::get('/{code}', [QuestionController::class, 'show'])->where('code', '[A-Za-z0-9]{5}')->name('questions.show');
+
 // Regular user routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [QuestionController::class, 'index'])->name('dashboard');
@@ -43,3 +46,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 // Other routes
 Route::get('/tutorial', [TutorialController::class, 'index'])->name('tutorial');
 Route::get('/export-pdf', [PDFExportController::class, 'exportPDF'])->name('export-pdf');
+
+// Route to store free response answers
+Route::post('/questions/storeFreeResponseAnswer', [QuestionController::class, 'storeFreeResponseAnswer'])->name('questions.storeFreeResponseAnswer');
+
+// Route to store multiple choice answers
+Route::post('/questions/storeMultipleChoiceAnswer', [QuestionController::class, 'storeMultipleChoiceAnswer'])->name('questions.storeMultipleChoiceAnswer');
+
+Route::get('/results/{code}', [QuestionController::class, 'showResults'])->name('questions.results');
+

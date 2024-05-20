@@ -14,9 +14,9 @@
 <body class="bg-gray-100">
     <nav class="bg-white px-6 py-4 shadow">
         <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-4"> 
+            <div class="flex items-center space-x-4">
                 <div class="text-lg font-semibold text-blue-600">Pseudo Slido</div>
-                <a href="{{ route('tutorial') }}" class="text-lg text-blue-600 hover:text-blue-700">Tutorial</a> 
+                <a href="{{ route('tutorial') }}" class="text-lg text-blue-600 hover:text-blue-700">Tutorial</a>
             </div>
             <div>
                 @if (Route::has('login'))
@@ -39,8 +39,29 @@
         <div class="text-center">
             <h1 class="text-4xl font-bold mb-4">Pseudo Slido</h1>
             <p>Welcome to your interactive Q&A platform.</p>
+
+            <!-- Form for entering the question code -->
+            <form id="codeForm" class="mt-8" onsubmit="redirectToQuestion(event)">
+                @csrf
+                <div class="mb-4">
+                    <input type="text" name="code" id="code" placeholder="Enter Question Code" 
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <button type="submit" 
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Submit
+                </button>
+            </form>
         </div>
     </div>
+
+    <script>
+        function redirectToQuestion(event) {
+            event.preventDefault();
+            const code = document.getElementById('code').value;
+            window.location.href = `/${code}`;
+        }
+    </script>
 </body>
 
 </html>

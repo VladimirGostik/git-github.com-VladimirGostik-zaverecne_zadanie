@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateQuestionRequest;
 use Illuminate\Http\Request;
 use App\Models\FreeResponseAnswer;
+use App\Models\MultipleChoiceAnswer;
 use App\Models\Question;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -184,22 +185,87 @@ class QuestionController extends Controller {
     return redirect()->route($dashboardRoute)->with('success', 'Question updated successfully!');
 }
 
+public function show($code)
+{
+    $question = Question::where('code', $code)->first();
+
+    if (!$question) {
+        return redirect()->back()->with('error', 'Question not found.');
+    }
+
+    $multipleChoiceAnswers = [];
+    if ($question->type === 'multiple_choice') {
+        $multipleChoiceAnswers = $question->multipleChoiceAnswers()->get();
+    }
+
+    return view('questions.show', compact('question', 'multipleChoiceAnswers'));
+}
 
     // Store a new free response answer in the database
     public function storeFreeResponseAnswer(Request $request)
-    {
-        // Validate request data
-        $request->validate([
-            'question_id' => 'required|exists:questions,id',
-            'answer' => 'required|string',
-        ]);
+{
+    // Validate request data
+    $request->validate([
+        'question_id' => 'required|exists:questions,id',
+        'answer' => 'required|string',
+    ]);
 
-        // Create new free response answer
-        $answer = new FreeResponseAnswer();
-        $answer->question_id = $request->input('question_id');
-        $answer->answer = $request->input('answer');
-        $answer->save();
+    // Create new free response answer
+    $answer = new FreeResponseAnswer();
+    $answer->question_id = $request->input('question_id');
+    $answer->answer = $request->input('answer');
+    $answer->save();
 
-        return redirect()->route('dashboard')->with('success', 'Answer submitted successfully!');
+    // Redirect to the results page for the question
+    return redirect()->route('questions.results', ['code' => $answer->question->code])->with('success', 'Answer submitted successfully!');
+}
+
+public function storeMultipleChoiceAnswer(Request $request)
+{
+    // Validate request data
+    $request->validate([
+        'question_id' => 'required|exists:questions,id',
+        'selected_options' => 'required|array',
+        'selected_options.*' => 'exists:multiple_choice_answers,id',
+    ]);
+
+    // Retrieve the question
+    $question = Question::findOrFail($request->input('question_id'));
+
+    // Update the counters for selected options
+    foreach ($request->input('selected_options') as $optionId) {
+        $option = MultipleChoiceAnswer::findOrFail($optionId);
+        $option->increment('counter');
     }
+
+    // Retrieve all options for the question with updated counters
+    $multipleChoiceAnswers = $question->multipleChoiceAnswers()->with('question')->get();
+
+    // Calculate the total number of votes
+    $totalVotes = $multipleChoiceAnswers->sum('counter');
+
+    // Retrieve the user's selections
+    $selectedOptions = $request->input('selected_options');
+
+    // Return the response as JSON
+    return response()->json([
+        'answers' => $multipleChoiceAnswers,
+        'totalVotes' => $totalVotes,
+        'userSelections' => $selectedOptions,
+    ]);
+}
+
+public function showResults($code)
+{
+    // Retrieve the question using the code
+    $question = Question::where('code', $code)->firstOrFail();
+
+    // Get all the free response answers for the question
+    $answers = FreeResponseAnswer::where('question_id', $question->id)->get();
+
+    // Pass the question and answers to the view
+    return view('questions.results', compact('question', 'answers'));
+}
+
+
 }
