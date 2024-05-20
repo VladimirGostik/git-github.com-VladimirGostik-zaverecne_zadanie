@@ -21,12 +21,21 @@
             
         </div>
     </nav>
-    <div class="flex items-center justify-center min-h-screen">
-        <div class="text-center">
+    <div class="flex items-center justify-center min-h-screen py-6">
+        <div class="container mx-auto max-w-2xl text-center">
             
                 <h1 class="text-4xl font-bold mb-4">{{__('tutorial.head')}}</h1>
                 <p class="text-xl mb-8">{{__('tutorial.text')}}</p>
-            
+
+                <h4 class="text-xl font-bold mb-4">{{__('tutorial.unauth_user')}}</h4>
+                <p class="text-xl mb-8">{{__('tutorial.unauth_user_text')}}</p>
+
+                <h4 class="text-xl font-bold mb-4">{{__('tutorial.auth_user')}}</h4>
+                <p class="text-xl mb-8">{{__('tutorial.auth_user_text')}}</p>
+
+                <h4 class="text-xl font-bold mb-4">{{__('tutorial.admin')}}</h4>
+                <p class="text-xl mb-8">{{__('tutorial.admin_text')}}</p>
+
             <div class="text-center">
                 <a href="/export-pdf"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
@@ -38,5 +47,6 @@
     </div>
 
 </body>
+
 
 </html>
