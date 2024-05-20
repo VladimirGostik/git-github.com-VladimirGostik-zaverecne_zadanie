@@ -44,6 +44,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
     Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/admin/users', [UserController::class, 'allUsers'])->name('admin.users');
     // Route::post('/questions/{question}/copy', [QuestionController::class, 'copy'])->name('admin.questions.copy'); + toto neide
