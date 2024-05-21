@@ -97,7 +97,7 @@
             pageLength: 25,
             initComplete: function () {
                 this.api()
-                    .columns([1, 5])
+                    .columns([0, 1, 5])
                     .every(function () {
                         let column = this;
 
