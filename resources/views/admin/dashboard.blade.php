@@ -28,6 +28,7 @@
                                 <th>Question</th>
                                 <th>Type</th>
                                 <th>Active</th>
+                                <th>Code</th>
                                 <th>Created At</th>
                                 <th>Manage</th>
                             </tr>
@@ -40,6 +41,7 @@
                                 <td>{{ $question->question }}</td>
                                 <td>{{ $question->type === 'open_ended' ? 'Short answer' : 'Multiple choice' }}</td>
                                 <td>{{ $question->active ? 'Yes' : 'No' }}</td>
+                                <td>{{ $question->code }}</td>
                                 <td>{{ date('Y-m-d', strtotime($question->created_at)) }}</td>
                                 <td>
                                     <div class="dropdown">
