@@ -1,4 +1,27 @@
-<x-guest-layout>
+<nav class="bg-white px-6 py-4 shadow">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="text-lg font-semibold text-blue-600">Pseudo Slido</div>
+                <a href="{{ route('tutorial') }}" class="text-lg text-blue-600 hover:text-blue-700">Tutorial</a>
+            </div>
+            <div>
+                @if (Route::has('login'))
+                    @auth
+                        <a href="{{ url('/dashboard') }}"
+                            class="text-blue-500 hover:text-blue-700 transition-colors px-3 py-2 rounded">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="text-blue-500 hover:text-blue-700 transition-colors px-3 py-2 rounded">Log in</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}"
+                                class="text-blue-500 hover:text-blue-700 transition-colors px-3 py-2 rounded">Register</a>
+                        @endif
+                    @endauth
+                @endif
+            </div>
+        </div>
+    </nav>
+    <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
